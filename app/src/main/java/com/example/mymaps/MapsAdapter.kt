@@ -46,7 +46,7 @@ class MapsAdapter(val context: Context, val userMaps: List<UserMap>, val onClick
         fun onItemClick(position: Int)
     }
     // ViewHolder class inherits from RecyclerView.ViewHolder
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) // dummy class?
 
     // onCreateViewHolder inflates the view inside of the ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
