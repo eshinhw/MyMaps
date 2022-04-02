@@ -39,6 +39,18 @@ class Node <E> {
 }
  */
 
+/*
+6 STEPS OF IMPLEMENTING RECYCLERVIEW
+
+1. Add RecyclerView AndroidX library to the Gradle build file
+2. Define a model class to use as the data source
+3. Add a RecyclerView to your activity to display the items
+4. Create a custom row layout XML file to visualize the item
+5. Create a RecyclerView.Adapter and ViewHolder to render the item
+6. Bind the adapter to the data source to populate the RecyclerView
+
+ */
+
 private const val TAG = "MapsAdapter"
 class MapsAdapter(val context: Context, val userMaps: List<UserMap>, val onClickListener: OnClickListener) : RecyclerView.Adapter<MapsAdapter.ViewHolder>() {
 
