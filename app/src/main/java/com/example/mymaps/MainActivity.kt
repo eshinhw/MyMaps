@@ -1,5 +1,6 @@
 package com.example.mymaps
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,13 +9,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymaps.models.Place
 import com.example.mymaps.models.UserMap
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-const val EXTRA_USER_MAP = "EXTRA_USER_MAP"
-private const val TAG = "MainActivity"
+
 class MainActivity : AppCompatActivity() {
 
-    val rvMaps : RecyclerView by lazy {
+    private val rvMaps : RecyclerView by lazy {
         findViewById(R.id.rvMaps)
+    }
+    private val fabCreateMap : FloatingActionButton by lazy {
+        findViewById(R.id.fabCreateMap)
+    }
+
+    companion object {
+        const val EXTRA_USER_MAP = "EXTRA_USER_MAP"
+        const val EXTRA_MAP_TITLE = "EXTRA_MAP_TITLE"
+        private const val TAG = "MainActivity"
+        private const val REQUEST_CODE = 200
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +56,14 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        fabCreateMap.setOnClickListener() {
+            Log.i(TAG, "add button clicked!")
+            val intent = Intent(this@MainActivity, CreateMapActivity::class.java)
+            intent.putExtra(EXTRA_MAP_TITLE, "new map title")
+            startActivityForResult(intent, REQUEST_CODE)
+        }
+
+
         // When user taps on view in RV, navigate to new activity
         /* Intent is a powerful concept within the Android universe.
         An intent is a message that can be thought of as a request that is given to either an activity within your own app,
@@ -55,6 +74,14 @@ class MainActivity : AppCompatActivity() {
         Explicit Intents: used to launch other activities within your application.
         We first need to create a class that we will navigate to.
          */
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // Get new map data from the data
+            // data?.getSerializableExtra()
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun generateSampleData(): List<UserMap> {
@@ -101,4 +128,6 @@ class MainActivity : AppCompatActivity() {
             )
         )
     }
+
+
 }
