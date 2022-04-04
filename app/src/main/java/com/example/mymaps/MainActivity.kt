@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
             override fun onItemClick(position: Int) {
                 Log.i(TAG, "onItemClick $position")
                 val intent = Intent(this@MainActivity, DisplayMapActivity::class.java)
+                Log.i(TAG, "${userMaps[position]}")
                 intent.putExtra(EXTRA_USER_MAP, userMaps[position])
                 startActivity(intent)
             }

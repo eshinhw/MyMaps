@@ -53,7 +53,9 @@ class Node <E> {
 
 private const val TAG = "MapsAdapter"
 class MapsAdapter(val context: Context, val userMaps: List<UserMap>, val onClickListener: OnClickListener) : RecyclerView.Adapter<MapsAdapter.ViewHolder>() {
-
+    // What does RecyclerView.Adapter<MapsAdapter.ViewHolder> mean?
+    // Same concept of List<Person> : List is a template and each element of the template is Person type
+    // RecyclerView.Adapter is parameterized/templatized by MapsAdapter.ViewHolder which is referring to the inner class we have inside MapsAdapter class
     interface OnClickListener {
         fun onItemClick(position: Int)
     }
