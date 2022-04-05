@@ -1,14 +1,21 @@
 package com.eddieshin.mymaps
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eddieshin.mymaps.models.Place
 import com.eddieshin.mymaps.models.UserMap
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -27,12 +34,16 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "MainActivity"
         private const val REQUEST_CODE = 200
     }
+
+    private lateinit var userMaps : MutableList<UserMap>
+    private lateinit var mapAdapter : MapsAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // get the list of UserMap objects which contain different places under each UserMap
-        val userMaps = generateSampleData()
+        userMaps = generateSampleData().toMutableList()
 
         // Set layout manager on the recycler view
         // Layout manager: responsible for telling the recyclerview how to layout the views on the screen
@@ -45,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         // Set adapter
         // Adapter is responsible for taking the data (in our case, userMaps) and binding it to particular view in the recyclerView
         // userMaps, the second parameter of MapsAdapter, is the actual list of data created in MainActivity which is passed to the adaptor
-        rvMaps.adapter = MapsAdapter(this, userMaps, object: MapsAdapter.OnClickListener {
+        mapAdapter = MapsAdapter(this, userMaps, object: MapsAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 Log.i(TAG, "onItemClick $position")
                 val intent = Intent(this@MainActivity, DisplayMapActivity::class.java)
@@ -56,11 +67,11 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        rvMaps.adapter = mapAdapter
+
         fabCreateMap.setOnClickListener() {
             Log.i(TAG, "add button clicked!")
-            val intent = Intent(this@MainActivity, CreateMapActivity::class.java)
-            intent.putExtra(EXTRA_MAP_TITLE, "new map title")
-            startActivityForResult(intent, REQUEST_CODE)
+            showAlertDialog()
         }
 
 
@@ -81,6 +92,8 @@ class MainActivity : AppCompatActivity() {
             // data?.getSerializableExtra()
             val userMap = data?.getSerializableExtra(EXTRA_USER_MAP) as UserMap
             Log.i(TAG, "onActivityResult with new map title ${userMap.title}")
+            userMaps.add(userMap)
+            mapAdapter.notifyDataSetChanged()
         }
 
         super.onActivityResult(requestCode, resultCode, data)
@@ -129,6 +142,38 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         )
+    }
+
+    private fun showAlertDialog() {
+        val mapFormView = LayoutInflater.from(this).inflate(R.layout.dialog_create_map, null)
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Map Title")
+            .setView(mapFormView)
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("OK", null)
+            .show()
+
+        // we only want to add a market on the map when the user taps on OK button on dialog
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+            // when working with user input data, we need to make sure they are valid.
+            // error validation & form handling
+            val title = mapFormView.findViewById<EditText>(R.id.etMapTitleName).text.toString()
+
+            if (title.trim().isNotEmpty()) {
+                // User has provided proper title
+                val intent = Intent(this@MainActivity, CreateMapActivity::class.java)
+                intent.putExtra(EXTRA_MAP_TITLE, title)
+                startActivityForResult(intent, REQUEST_CODE)
+                dialog.dismiss()
+            } else {
+                Toast.makeText(this, "Map must have non-empty title!", Toast.LENGTH_LONG).show()
+                dialog.dismiss()
+                return@setOnClickListener
+            }
+
+
+        }
+
     }
 
 

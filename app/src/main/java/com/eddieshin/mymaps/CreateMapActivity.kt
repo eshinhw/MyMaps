@@ -115,9 +115,16 @@ class CreateMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val toronto = LatLng(43.6532, -79.3832)
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 10f))
+        // zoom level between 1 and 21
+        /*
+        1: World
+        5: Landmass/continent
+        10: City
+        15: Streets
+        20: Buildings
+         */
     }
 
     private fun showAlertDialog(latLng: LatLng) {
