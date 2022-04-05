@@ -1,4 +1,4 @@
-package com.example.mymaps.models
+package com.eddieshin.mymaps.models
 
 import java.io.Serializable
 

@@ -1,4 +1,4 @@
-package com.example.mymaps
+package com.eddieshin.mymaps
 
 import org.junit.Test
 

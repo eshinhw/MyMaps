@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mymaps">
+    package="com.eddieshin.mymaps">
 
     <application
         android:allowBackup="true"
@@ -26,15 +26,15 @@
             android:value="YOUR_API_KEY" />
 
         <activity
-            android:name=".CreateMapActivity"
+            android:name="com.eddieshin.mymaps.CreateMapActivity"
             android:exported="false"
             android:label="@string/title_activity_create_map" />
         <activity
-            android:name=".DisplayMapActivity"
+            android:name="com.eddieshin.mymaps.DisplayMapActivity"
             android:exported="false"
             android:label="@string/title_activity_display_map" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.eddieshin.mymaps.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.example.mymaps
+package com.eddieshin.mymaps
 
 import android.app.Activity
 import android.content.Intent
@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mymaps.models.Place
-import com.example.mymaps.models.UserMap
+import com.eddieshin.mymaps.models.Place
+import com.eddieshin.mymaps.models.UserMap
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -79,6 +79,8 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             // Get new map data from the data
             // data?.getSerializableExtra()
+            val userMap = data?.getSerializableExtra(EXTRA_USER_MAP) as UserMap
+            Log.i(TAG, "onActivityResult with new map title ${userMap.title}")
         }
 
         super.onActivityResult(requestCode, resultCode, data)

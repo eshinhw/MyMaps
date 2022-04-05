@@ -1,4 +1,4 @@
-package com.example.mymaps
+package com.eddieshin.mymaps
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

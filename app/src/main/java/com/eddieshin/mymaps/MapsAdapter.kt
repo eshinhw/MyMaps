@@ -1,4 +1,4 @@
-package com.example.mymaps
+package com.eddieshin.mymaps
 
 import android.content.Context
 import android.util.Log
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mymaps.models.UserMap
+import com.eddieshin.mymaps.models.UserMap
 
 // MapsAdapter inherits from RecyclerView.Adapter (becomes the child of RecyclerView.Adapter)
 // RecyclerView.Adapter is parameterized by ViewHolder
