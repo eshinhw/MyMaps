@@ -1,6 +1,7 @@
 package com.eddieshin.mymaps
 
 import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +18,20 @@ import com.eddieshin.mymaps.models.UserMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.io.*
 
+/* Episode 6: Data Persistence
+
+- Shared Preferences
+- Local Files
+    when the data we need to store is small, we can quickly save the data into the file and read the file when we open the app.
+    However, if there are millions of data which must be stored, writing to a single file is very slow and inefficient.
+    Not a perfect solution for all possible scenarios, but done is better than perfect.
+    In Android environment, there is a dedicated location for reading and writing files.
+- SQLite Database
+- ORM
+
+ */
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         const val EXTRA_MAP_TITLE = "EXTRA_MAP_TITLE"
         private const val TAG = "MainActivity"
         private const val REQUEST_CODE = 200
+        private const val FILE_NAME = "UserMaps.data"
     }
 
     private lateinit var userMaps : MutableList<UserMap>
@@ -41,9 +56,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val dataFromFile = deserializeUserMaps(this)
+
+        userMaps = if (dataFromFile.isEmpty()) {
+            generateSampleData().toMutableList()
+        } else {
+            dataFromFile.toMutableList()
+        }
 
         // get the list of UserMap objects which contain different places under each UserMap
-        userMaps = generateSampleData().toMutableList()
 
         // Set layout manager on the recycler view
         // Layout manager: responsible for telling the recyclerview how to layout the views on the screen
@@ -93,10 +114,34 @@ class MainActivity : AppCompatActivity() {
             val userMap = data?.getSerializableExtra(EXTRA_USER_MAP) as UserMap
             Log.i(TAG, "onActivityResult with new map title ${userMap.title}")
             userMaps.add(userMap)
+            serializeUserMaps(this, userMaps)
             mapAdapter.notifyDataSetChanged()
+
         }
 
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun serializeUserMaps(context: Context, userMaps: List<UserMap>) {
+        Log.i(TAG, "serializeUserMaps")
+        // Get FileOutputStream, pass it to ObjectOutputStream and write userMaps
+        // It's possible because userMaps is serializable
+        ObjectOutputStream(FileOutputStream(getDataFile(context))).use { it.writeObject(userMaps) }
+    }
+
+    private fun deserializeUserMaps(context: Context) : List<UserMap> {
+        Log.i(TAG, "deserializeUserMaps")
+        val dataFile = getDataFile(context)
+        if (!dataFile.exists()) {
+            Log.i(TAG, "dataFile doesn't exist")
+            return emptyList()
+        }
+        ObjectInputStream(FileInputStream(dataFile)).use { return it.readObject() as List<UserMap>}
+    }
+
+    private fun getDataFile(context: Context) : File {
+        Log.i(TAG, "Getting file from directory ${context.filesDir}")
+        return File(context.filesDir, FILE_NAME)
     }
 
     private fun generateSampleData(): List<UserMap> {
